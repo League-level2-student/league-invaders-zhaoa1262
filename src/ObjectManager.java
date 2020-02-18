@@ -2,13 +2,15 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Random; 
+import java.util.Random;
 
-public class ObjectManager implements ActionListener{
+public class ObjectManager implements ActionListener {
 	Rocketship rocket;
 	ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	ArrayList<Alien> aliens = new ArrayList<Alien>();
 	Random random = new Random();
+	int score = 0;
+	
 
 	ObjectManager(Rocketship rocket) {
 		this.rocket = rocket;
@@ -26,14 +28,22 @@ public class ObjectManager implements ActionListener{
 		for (int i = 0; i < aliens.size(); i++) {
 			Alien alien = aliens.get(i);
 			alien.update();
-			if (LeagueInvaders.HEIGHT > 800 || LeagueInvaders.HEIGHT < 0) {
+			if (rocket.isActive == false) {
+				checkCollision();
+				purgeObjects();
+			}
+			if (LeagueInvaders.HEIGHT < 800 || LeagueInvaders.HEIGHT > 0) {
 				alien.isActive = false;
 			}
-		} 
-		
-		for(int i = 0; i < projectiles.size(); i++) {
+		}
+
+		for (int i = 0; i < projectiles.size(); i++) {
 			Projectile projectile = projectiles.get(i);
 			projectile.update();
+			if (rocket.isActive == false) {
+				checkCollision();
+				purgeObjects();
+			}
 		}
 		System.out.println(projectiles.size());
 
@@ -52,9 +62,23 @@ public class ObjectManager implements ActionListener{
 	}
 
 	void checkCollision() {
-		
+		for (int i = 0; i < aliens.size(); i++) {
+			Alien alien = aliens.get(i);
+			if (rocket.collisionBox.intersects(alien.collisionBox)) {
+				rocket.isActive = false;
+				
+			}
+
+			for (int x = 0; x < projectiles.size(); x++) {
+				Projectile projectile = projectiles.get(x);
+				if (projectile.collisionBox.intersects(alien.collisionBox)) {
+					projectile.isActive = false;
+					System.out.println("bob");
+				}
+			}
+		}
 	}
-	
+
 	void purgeObjects() {
 		for (int i = 0; i < aliens.size(); i++) {
 			Alien alien = aliens.get(i);
@@ -68,6 +92,7 @@ public class ObjectManager implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		addAlien();
+		System.out.println(aliens.size());
 	}
 
 }
