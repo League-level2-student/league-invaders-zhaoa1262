@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -85,16 +86,21 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawGameState(Graphics g) {
 		g.drawImage(background, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
 		objectManager.draw(g);
+		
 	}
 
 	void drawEndState(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+		
+		g.setColor(Color.black);
+		g.drawString("score: "+objectManager.getScore(), 10, 10);
 	}
 
 	void startGame() {
 		alienSpawn = new Timer(1000, objectManager);
 		alienSpawn.start();
+		
 	}
 
 	@Override
@@ -141,6 +147,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 				if (currentState == END) {
 					alienSpawn.stop();
+					rocketship = new Rocketship(rocketship.x, rocketship.y, 50, 50);
+					objectManager = new ObjectManager(rocketship);
 				}
 
 			}
@@ -148,11 +156,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				startGame();
 			}
 		}
+		if (currentState == MENU) {
+
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				JOptionPane.showMessageDialog(null, "Use arrow keys to move. Press SPACE to fire. Try not to die.");
+				
+			}
+		}
 
 		if (currentState == GAME) {
 
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				objectManager.addProjectile(rocketship.getProjectile());
+				
 			}
 		}
 
