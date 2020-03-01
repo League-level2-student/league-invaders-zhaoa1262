@@ -27,7 +27,7 @@ public class LeagueInvaders implements KeyListener {
 	public static void main(String[] args) {
 		LeagueInvaders thing = new LeagueInvaders();
 		thing.setup();
-		System.out.println();
+		
 	}
 
 	@Override

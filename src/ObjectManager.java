@@ -26,17 +26,18 @@ public class ObjectManager implements ActionListener {
 
 	void addAlien() {
 		aliens.add(new Alien(random.nextInt(LeagueInvaders.WIDTH), 0, 50, 50));
+		System.out.println("bob");
 	}
 
 	void update() {
 		for (int i = 0; i < aliens.size(); i++) {
 			Alien alien = aliens.get(i);
 			alien.update();
-			if (rocket.isActive == false) {
+			
 				checkCollision();
 				purgeObjects();
-			}
-			if (LeagueInvaders.HEIGHT < 800 || LeagueInvaders.HEIGHT > 0) {
+			
+			if (alien.y > 800 || alien.x < 0) {
 				alien.isActive = false;
 			}
 		}
@@ -49,7 +50,6 @@ public class ObjectManager implements ActionListener {
 				purgeObjects();
 			}
 		}
-		System.out.println(projectiles.size());
 
 	}
 
@@ -66,23 +66,22 @@ public class ObjectManager implements ActionListener {
 	}
 
 	void checkCollision() {
-		for (int i = 0; i < aliens.size(); i++) {
-			Alien alien = aliens.get(i);
+		for (Alien alien : aliens) {
+			
 			if (rocket.collisionBox.intersects(alien.collisionBox)) {
 				rocket.isActive = false;
 				alien.isActive = false;
-				
+
 			}
 
 		}
 
-		for (int x = 0; x < projectiles.size(); x++) {
+		for (Projectile projectile : projectiles) {
 
-			Projectile projectile = projectiles.get(x);
-			for (int y = 0; y < aliens.size(); y++) {
-				Alien alien = aliens.get(y);
-				if (projectile.collisionBox.intersects(alien.collisionBox)) {
-					alien.isActive = false;
+			for (Alien alienx : aliens) {
+				
+				if (projectile.collisionBox.intersects(alienx.collisionBox)) {
+					alienx.isActive = false;
 					projectile.isActive = false;
 					score = score + 1;
 
@@ -102,7 +101,7 @@ public class ObjectManager implements ActionListener {
 		for (int x = 0; x < projectiles.size(); x++) {
 			Projectile projectile = projectiles.get(x);
 			if (projectile.isActive == false) {
-				aliens.remove(x);
+				projectiles.remove(x);
 			}
 		}
 	}
@@ -111,7 +110,7 @@ public class ObjectManager implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		addAlien();
-		System.out.println(aliens.size());
+
 	}
 
 }
